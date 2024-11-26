@@ -31,6 +31,7 @@ def check_bound(rct:pg.Rect) -> tuple[bool,bool]:
         tate=False
     return yoko,tate
 
+
 #演習課題1
 def gameover(screen: pg.Surface) -> None:
     """
@@ -58,6 +59,7 @@ def gameover(screen: pg.Surface) -> None:
     pg.display.update()  # 描画内容を更新
     time.sleep(5)  # 5秒間表示
 
+
 #演習課題2
 def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
     """
@@ -70,6 +72,7 @@ def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
         bb_imgs.append(bb_img)
     accs = [a for a in range(1, 11)]  # 加速度リスト
     return bb_imgs, accs
+
 
 #演習課題3
 def get_kk_img(sum_mv: tuple[int, int]) -> pg.Surface:        
@@ -90,6 +93,7 @@ def get_kk_img(sum_mv: tuple[int, int]) -> pg.Surface:
     }
     return kk_images.get(sum_mv, kk_images[(0, 0)])
 
+
 #演習課題4
 import math
 
@@ -106,12 +110,6 @@ def calc_orientation(org: pg.Rect, dst: pg.Rect, current_xy: tuple[float, float]
     # 正規化してノルムを√50にする
     norm = math.sqrt(50) / distance
     return dx * norm, dy * norm
-
-
-
-    
-
-
 
 
 def main():
