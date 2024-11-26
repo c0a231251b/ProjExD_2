@@ -70,7 +70,30 @@ def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
     accs = [a for a in range(1, 11)]  # 加速度リスト
     return bb_imgs, accs
 
-        
+#演習課題3
+def get_kk_img(sum_mv: tuple[int, int]) -> pg.Surface:        
+    """
+    移動量の合計値タプルに対応する向きの画像Surfaceを返す。
+    """
+    kk_base_img = pg.image.load("fig/3.png")
+    kk_images = {
+        (-5, 0): pg.transform.rotozoom(kk_base_img, 0, 0.9),
+        (-5, 5): pg.transform.rotozoom(kk_base_img, 45, 0.9),
+        (0, 5): pg.transform.rotozoom(kk_base_img, 90, 0.9),
+        (5, 5): pg.transform.rotozoom(pg.transform.flip(kk_base_img, True, False), -45, 0.9),
+        (5, 0): pg.transform.rotozoom(pg.transform.flip(kk_base_img, True, False), 0, 0.9),
+        (5, -5): pg.transform.rotozoom(pg.transform.flip(kk_base_img, True, False), 45, 0.9),
+        (0, -5): pg.transform.rotozoom(kk_base_img, -90, 0.9),
+        (-5, -5): pg.transform.rotozoom(kk_base_img, -45, 0.9),
+        (0, 0): pg.transform.rotozoom(kk_base_img, 0, 0.9),  # 静止時
+    }
+    return kk_images.get(sum_mv, kk_images[(0, 0)])
+
+
+   
+
+
+    
 
 
 
@@ -107,13 +130,17 @@ def main():
             if key_lst[key]==True:
                 sum_mv[0] += tpl[0]
                 sum_mv[1] += tpl[1]
+
+        
+        kk_img=get_kk_img(tuple(sum_mv))
+
         
         kk_rct.move_ip(sum_mv)
         if check_bound(kk_rct)!=(True,True):
             kk_rct.move_ip(-sum_mv[0],-sum_mv[1])
         screen.blit(kk_img, kk_rct)
 
-             # 爆弾のサイズと加速の更新
+        # 爆弾のサイズと加速の更新
         idx = min(tmr // 500, 9)  # 時間に応じて段階を選択（最大9）
         avx = vx * bb_accs[idx]  # 加速度適用
         avy = vy * bb_accs[idx]
@@ -122,7 +149,7 @@ def main():
 
 
         bb_rct.move_ip(vx,vy) #爆弾動く
-        bb_rct.move_ip(avx,avy)
+        bb_rct.move_ip(avx,avy)#爆弾動く
         yoko,tate=check_bound(bb_rct)
         if not yoko:
             vx*=-1
