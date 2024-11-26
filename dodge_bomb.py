@@ -1,4 +1,5 @@
 import os
+import math
 import random
 import sys
 import time
@@ -89,8 +90,23 @@ def get_kk_img(sum_mv: tuple[int, int]) -> pg.Surface:
     }
     return kk_images.get(sum_mv, kk_images[(0, 0)])
 
+#演習課題4
+import math
 
-   
+def calc_orientation(org: pg.Rect, dst: pg.Rect, current_xy: tuple[float, float]) -> tuple[float, float]:
+    """
+    orgから見てdstがどの方向にあるかを計算し、移動方向ベクトルを返す。
+    """
+    dx, dy = dst.centerx - org.centerx, dst.centery - org.centery
+    distance = math.sqrt(dx**2 + dy**2)
+
+    if distance < 300:  # 近づきすぎたら慣性を維持
+        return current_xy
+
+    # 正規化してノルムを√50にする
+    norm = math.sqrt(50) / distance
+    return dx * norm, dy * norm
+
 
 
     
@@ -145,6 +161,11 @@ def main():
         avx = vx * bb_accs[idx]  # 加速度適用
         avy = vy * bb_accs[idx]
         bb_img = bb_imgs[idx]  # サイズ更新
+
+        # 爆弾の追従計算
+        vx, vy = calc_orientation(bb_rct, kk_rct, (vx, vy))
+        bb_rct.move_ip(vx, vy)
+
 
 
 
