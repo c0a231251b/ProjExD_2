@@ -14,6 +14,21 @@ DELTA={
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
+def check_bound(rct:pg.Rect) -> tuple[bool,bool]:
+
+    """
+    引数で与えられたRectが画面の中か外か判定する
+    引数:こうかとんRect or 爆弾Rect
+    戻り値：真理値タプル（縦、横）/画面内:True、画面外Flase
+
+    """
+    yoko,tate=True,True
+    if rct.left < 0 or WIDTH < rct.right:
+        yoko =False 
+    if rct.top < 0 or HEIGHT < rct.bottom:
+        tate=False
+    return yoko,tate
+
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -23,7 +38,7 @@ def main():
     kk_rct.center = 300, 200
     bb_img = pg.Surface(((20,20))) #爆弾用のsurface
     pg.draw.circle(bb_img,(255,0,0),(10,10),10) #爆弾円を描く
-    bb_img.set_colorkey((0,0,0)) #周りの色を黒にする
+    bb_img.set_colorkey((0,0,0)) #四隅の黒を透過させる
     bb_rct = bb_img.get_rect() #爆弾円rectの抽出
     bb_rct.center=random.randint(0,WIDTH),random.randint(0,HEIGHT)
     vx,vy=+5,+5 #爆弾速度ベクトル
@@ -43,8 +58,16 @@ def main():
                 sum_mv[1] += tpl[1]
         
         kk_rct.move_ip(sum_mv)
+        if check_bound(kk_rct)!=(True,True):
+            kk_rct.move_ip(-sum_mv[0],-sum_mv[1])
         screen.blit(kk_img, kk_rct)
         bb_rct.move_ip(vx,vy) #爆弾動く
+        yoko,tate=check_bound(bb_rct)
+        if not yoko:
+            vx*=-1
+        if not tate:
+            vy*=-1
+        
         screen.blit(bb_img, bb_rct)
         pg.display.update()
         tmr += 1
