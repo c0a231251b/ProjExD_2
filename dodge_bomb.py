@@ -81,6 +81,7 @@ def get_kk_img(sum_mv: tuple[int, int]) -> pg.Surface:
     """
     kk_base_img = pg.image.load("fig/3.png")
     kk_images = {
+        #こうかとん変更
         (-5, 0): pg.transform.rotozoom(kk_base_img, 0, 0.9),
         (-5, 5): pg.transform.rotozoom(kk_base_img, 45, 0.9),
         (0, 5): pg.transform.rotozoom(kk_base_img, 90, 0.9),
